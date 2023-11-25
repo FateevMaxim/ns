@@ -20,7 +20,7 @@ class DashboardController extends Controller
             $tracks = ClientTrackList::query()
                 ->leftJoin('track_lists', 'client_track_lists.track_code', '=', 'track_lists.track_code')
                 ->select( 'client_track_lists.track_code', 'client_track_lists.detail', 'client_track_lists.created_at',
-                    'track_lists.to_china','track_lists.to_almaty','client_track_lists.id','track_lists.to_client','track_lists.client_accept','track_lists.status','track_lists.city')
+                    'track_lists.to_china','track_lists.to_almaty','client_track_lists.id','track_lists.to_client','track_lists.client_accept','track_lists.status','track_lists.city','track_lists.weight')
                 ->where('client_track_lists.user_id', Auth::user()->id)
                 ->where('client_track_lists.status',null)
                 ->orderByDesc('client_track_lists.id')
@@ -35,6 +35,10 @@ class DashboardController extends Controller
             $config = Configuration::query()->select('address', 'title_text', 'address_two')->first();
             $count = TrackList::query()->whereDate('created_at', Carbon::today())->count();
             return view('stock')->with(compact('count', 'config'));
+        } elseif (Auth::user()->type === 'newstock') {
+            $config = Configuration::query()->select('address', 'title_text', 'address_two')->first();
+            $count = TrackList::query()->whereDate('created_at', Carbon::today())->count();
+            return view('newstock')->with(compact('count', 'config'));
         }elseif (Auth::user()->is_active === 1 && Auth::user()->type === 'almatyin'){
             $config = Configuration::query()->select('address', 'title_text', 'address_two')->first();
             $count = TrackList::query()->whereDate('to_almaty', Carbon::today())->count();

@@ -34,6 +34,9 @@ Route::get('/register-me', function () {
     return view('register-me');
 })->middleware(['auth', 'verified'])->name('register-me');
 
+Route::get('/newstock', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])->name('newstock');
+
 Route::middleware('auth')->group(function () {
     Route::post('/file-import', [ProductController::class, 'fileImport'])->name('file-import');
     Route::get('/file-export', [ProductController::class, 'fileExport'])->name('file-export');
